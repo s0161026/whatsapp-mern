@@ -1,2 +1,2 @@
 # whatsapp-mern
-whatsapp-clone
+whatsapp clone project
