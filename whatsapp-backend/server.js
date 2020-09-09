@@ -8,14 +8,6 @@ import Pusher from "pusher"
 const app = express()
 const port = process.env.PORT || 9000
 
-const pusher = new Pusher({
-    appId: '1069535',
-    key: '6b4814de61684932d069',
-    secret: '27752d4bcf2b429b7c4e',
-    cluster: 'us2',
-    encrypted: true
-});
-
 // listen and trigger pusher
 const db = mongoose.connection
 db.once('open', () => {
