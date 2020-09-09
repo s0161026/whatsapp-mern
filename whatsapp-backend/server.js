@@ -2,16 +2,38 @@
 import express from "express"
 import mongoose from "mongoose"
 import Messages from "./dbMessages.js"
+import Pusher from "pusher"
 
 // app config
 const app = express()
 const port = process.env.PORT || 9000
 
+const pusher = new Pusher({
+    appId: '1069535',
+    key: '6b4814de61684932d069',
+    secret: '27752d4bcf2b429b7c4e',
+    cluster: 'us2',
+    encrypted: true
+});
+
+// listen and trigger pusher
+const db = mongoose.connection
+db.once('open', () => {
+    console.log('DB is connected')
+
+    const msgCollection = db.collection("messagecontents")
+    const changeStream = msgCollection.watch()
+
+    changeStream.on('change', (change) => {
+        console.log('A change occured', change)
+    })
+})
+
 // middlerware
 app.use(express.json())
 
 // DB config
-const connection_url = '' 
+const connection_url = 'mongodb+srv://admin:3u3Dk9dO8RyUKW7H@cluster0.k8yiq.mongodb.net/whatsappdb?retryWrites=true&w=majority' 
 mongoose.connect(connection_url, {
     useCreateIndex: true,
     useNewUrlParser: true,
