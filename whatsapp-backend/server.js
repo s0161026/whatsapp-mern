@@ -3,6 +3,7 @@ import express from "express"
 import mongoose from "mongoose"
 import Messages from "./dbMessages.js"
 import Pusher from "pusher"
+import cors from "cors"
 
 // app config
 const app = express()
@@ -22,8 +23,10 @@ db.once('open', () => {
         if (change.operationType === 'insert') {
             const messageDetails = change.fullDocument
             pusher.trigger('messages', 'inserted', {
-                name: messageDetails.user,
+                name: messageDetails.name,
                 message: messageDetails.message,
+                timestamp: messageDetails.timestamp,
+                received: messageDetails.received,
             })
         } else {
             console.log('Error triggering Pusher')
@@ -33,6 +36,7 @@ db.once('open', () => {
 
 // middlerware
 app.use(express.json())
+app.use(cors()) // set headers
 
 // DB config
 const connection_url = '' 
